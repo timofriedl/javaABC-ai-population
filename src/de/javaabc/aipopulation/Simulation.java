@@ -27,7 +27,7 @@ public class Simulation extends JFrame implements Tickable, Renderable {
 
     static {
         try {
-            FONT = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(Simulation.class.getResourceAsStream("/fonts/JetBrains Mono/JetBrainsMono-VariableFont_wght.ttf")));
+            FONT = new Font("JetBrains Mono", Font.PLAIN, 12);
         } catch (FontFormatException | IOException e) {
             throw new RuntimeException(e);
         }
