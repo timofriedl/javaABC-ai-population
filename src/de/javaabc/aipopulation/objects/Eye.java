@@ -3,30 +3,82 @@ package de.javaabc.aipopulation.objects;
 import de.javaabc.aipopulation.Simulation;
 import de.javaabc.aipopulation.geom.Line;
 import de.javaabc.aipopulation.geom.Rot;
+import de.javaabc.aipopulation.geom.Vec;
+import de.javaabc.aipopulation.util.RenderUtils;
 import de.javaabc.aipopulation.util.Tickable;
 
 import java.awt.*;
 import java.io.Serializable;
-import java.util.Comparator;
-import java.util.Map;
 import java.util.Optional;
 
+/**
+ * The visual system of an {@link Individual}.
+ * <p>
+ * The eye detects the closest {@link Food} object as well as the closest other {@link Individual}.
+ * More specifically, the following data is gathered:
+ * - The direction and (squared) distance to the detected closest food object
+ * - The direction and (squared) distance to the detected closest other individual
+ * - Both hue and saturation value of the color of the detected closest other individual
+ *
+ * @author Timo Friedl
+ */
 public class Eye implements Tickable, Serializable {
+    /**
+     * A reference to the main {@link Simulation}.
+     */
     private transient Simulation simulation;
+
+    /**
+     * the {@link Individual} owning this eye
+     */
     private final MovableObject owner;
 
-    // Food
+    /**
+     * the detected closest food object, if any
+     */
     private transient Optional<Food> foodTarget;
+
+    /**
+     * the rotation difference between this eye's owner and the detected food object
+     */
     private Rot detectedFoodRotation = Rot.ZERO;
+
+    /**
+     * the squared distance to the detected food object
+     */
     private double detectedFoodSqDistance = Double.MAX_VALUE;
 
-    // Enemys
+    /**
+     * the detected closest other individual, if any
+     */
     private transient Optional<Individual> enemyTarget;
+
+    /**
+     * the rotation difference between this eye's owner and the detected closest other individual
+     */
     private Rot detectedEnemyRotation = Rot.ZERO;
+
+    /**
+     * the squared distance to the detected closest other individual
+     */
     private double detectedEnemySqDistance = Double.MAX_VALUE;
+
+    /**
+     * the hue value of the detected closest other individual's color
+     */
     private double detectedEnemyHue = -1.0;
+
+    /**
+     * the saturation value of the detected closest other individual's color
+     */
     private double detectedEnemySaturation = -1.0;
 
+    /**
+     * Creates a new visual system for a certain individual.
+     *
+     * @param simulation the reference to the main {@link Simulation}
+     * @param owner      the {@link Individual} owning this eye
+     */
     public Eye(Simulation simulation, MovableObject owner) {
         this.simulation = simulation;
         this.owner = owner;
@@ -36,35 +88,31 @@ public class Eye implements Tickable, Serializable {
 
     @Override
     public void tick() {
-        foodTarget = simulation.getWorld().getFoodObjects().stream(false)
-                .map(food -> Map.entry(food, food.getPos().sub(owner.getPos()).squareLength()))
-                .min(Comparator.comparingDouble(Map.Entry::getValue))
-                .map(Map.Entry::getKey);
-
+        // Food
+        foodTarget = owner.findClosest(simulation.getWorld().getFoodObjects());
         foodTarget.ifPresentOrElse(food -> {
-            detectedFoodSqDistance = food.getPos().sub(owner.getPos()).squareLength();
-            detectedFoodRotation = food.getPos().sub(owner.getPos()).angle().sub(owner.getRot());
+            Vec distance = owner.vectorTo(food);
+            detectedFoodSqDistance = distance.squareLength();
+            detectedFoodRotation = distance.angle().sub(owner.getRot());
         }, () -> {
             detectedFoodSqDistance = Double.MAX_VALUE;
             detectedFoodRotation = Rot.ZERO;
         });
 
-        enemyTarget = simulation.getWorld().getIndividuals().stream(false)
-                .filter(ind -> ind != owner)
-                .map(ind -> Map.entry(ind, ind.getPos().sub(owner.getPos()).squareLength()))
-                .min(Comparator.comparingDouble(Map.Entry::getValue))
-                .map(Map.Entry::getKey);
-
+        // Other individual
+        enemyTarget = owner.findClosest(simulation.getWorld().getIndividuals());
         enemyTarget.ifPresentOrElse(enemy -> {
-            detectedEnemySqDistance = enemy.getPos().sub(owner.getPos()).squareLength();
-            detectedEnemyRotation = enemy.getPos().sub(owner.getPos()).angle().sub(owner.getRot());
-            float[] hsv = new float[3];
-            Color.RGBtoHSB(enemy.color.getRed(), enemy.color.getGreen(), enemy.color.getBlue(), hsv);
+            Vec distance = owner.vectorTo(enemy);
+            detectedEnemySqDistance = distance.squareLength();
+            detectedEnemyRotation = distance.angle().sub(owner.getRot());
+
+            float[] hsv = RenderUtils.colorToHsv(enemy.color);
             detectedEnemyHue = hsv[0];
             detectedEnemySaturation = hsv[1];
         }, () -> {
             detectedEnemySqDistance = Double.MAX_VALUE;
             detectedEnemyRotation = Rot.ZERO;
+
             detectedEnemyHue = -1.0;
             detectedEnemySaturation = -1.0;
         });
@@ -73,8 +121,12 @@ public class Eye implements Tickable, Serializable {
     @Deprecated
     public void render(Graphics2D g) {
         g.setStroke(new BasicStroke(2f));
+
+        // Line to the closest food
         g.setColor(Color.DARK_GRAY);
         foodTarget.ifPresent(food -> g.draw(new Line(owner.getPos(), food.getPos())));
+
+        // Line to the closest other individual
         g.setColor(owner.getColor());
         enemyTarget.ifPresent(enemy -> g.draw(new Line(owner.getPos(), enemy.getPos())));
     }

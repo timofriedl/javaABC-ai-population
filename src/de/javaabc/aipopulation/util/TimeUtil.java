@@ -1,6 +1,17 @@
 package de.javaabc.aipopulation.util;
 
+/**
+ * Utility class for everything time related.
+ *
+ * @author Timo Friedl
+ */
 public class TimeUtil {
+    /**
+     * Formats a given number of ticks to a duration string.
+     *
+     * @param ticks the number of ticks
+     * @return the created duration string
+     */
     public static String formatDuration(long ticks) {
         double hoursExact = ticks / (60.0 * 60.0 * 60.0);
         int hours = (int) hoursExact;
