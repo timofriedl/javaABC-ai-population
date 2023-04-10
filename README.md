@@ -3,7 +3,7 @@ Bacteria Simulation with Genetic Algorithm
 
 ## How to start:
 
-1) Create a new IntelliJ Project from Version Control
+1) Create a new IntelliJ project from Version Control
 
 ![clone](https://user-images.githubusercontent.com/52008460/231006420-8dbcd7af-f2af-452d-bb7f-54a55e3f5fef.PNG)
 
@@ -13,7 +13,7 @@ Bacteria Simulation with Genetic Algorithm
 ![clone2](https://user-images.githubusercontent.com/52008460/231006525-4f61d3f2-ea20-4e13-a9c5-74638dcdfaa1.PNG)
 
 
-3) Open ```Simulation.java``` file in the src directory
+3) Open ```Simulation.java``` file in the ```src``` directory
 
 ![jdk](https://user-images.githubusercontent.com/52008460/231006777-39615e12-292a-47bc-8677-83bbc2261314.PNG)
 
