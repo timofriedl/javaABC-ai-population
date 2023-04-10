@@ -28,6 +28,33 @@ Bacteria Simulation with Genetic Algorithm
 ![res](https://user-images.githubusercontent.com/52008460/231006901-fc8bb37c-1780-4900-b490-717d54029237.PNG)
 
 
-6) Launch!
+6) Launch! You can close the simulation using ```ALT+F4```
 
 ![start](https://user-images.githubusercontent.com/52008460/231006920-8624f838-99ce-4ff7-8be6-018986905060.PNG)
+
+
+## Save / Load
+
+Every 5min (simulation time), the world is automatically saved in your home directory, e.g.
+```
+C:\Users\TimoF\.aipopulation\world.txt
+```
+
+If you close the window using ```ALT+F4```, the world will be saved too.
+
+If you want to reset the world, just delete ```world.txt```. A new world will be created automatically.
+
+
+## Controls
+
+- ```SPACE```: pause / resume
+
+- ```F```: toggle fast forward
+
+- ```B```: toggle show fittest individual
+
+- ```G```: toggle render generation for each individual
+
+- ```O```: toggle show oldest individual
+
+- ```M```: toggle show generation title and individual with highest generation
