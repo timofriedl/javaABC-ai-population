@@ -58,3 +58,8 @@ If you want to reset the world, just delete ```world.txt```. A new world will be
 - ```O```: toggle show oldest individual
 
 - ```M```: toggle show generation title and individual with highest generation
+
+
+## Support
+
+If you like this project, you can support me on https://ko-fi.com/javaabc
