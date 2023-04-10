@@ -1,4 +1,4 @@
-# javaABC-ai-population
+# javaABC AI Population
 Bacteria Simulation with Genetic Algorithm
 
 ## How to start:
