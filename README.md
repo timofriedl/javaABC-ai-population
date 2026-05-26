@@ -1,6 +1,10 @@
 # javaABC AI Population
 Bacteria Simulation with Genetic Algorithm
 
+<p align="center">
+  <img src="docs/bacteria.gif" alt="Bacteria simulation with genetic algorithm demo" width="80%">
+</p>
+
 ## How to start:
 
 1) Create a new IntelliJ project from Version Control
